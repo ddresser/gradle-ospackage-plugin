@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh
 
 case "\$1" in
     install)

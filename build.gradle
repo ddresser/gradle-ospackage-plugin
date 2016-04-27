@@ -20,6 +20,38 @@ buildscript { repositories { jcenter() } } // Some plugin dependencies (namely J
 plugins {
     id 'com.gradle.plugin-publish' version '0.9.4'
     id 'nebula.plugin-plugin' version '4.1.0'
+    id 'ivy-publish'
+}
+
+artifactory {
+    contextUrl = "${local_artifactory_contextUrl}"
+    publish {
+        repository {
+            repoKey = 'gradle-plugins-releases-local'
+            username = "${local_artifactory_user}"
+            password = "${local_artifactory_password}"
+            maven = false
+            ivy {
+                ivyLayout = '[organization]/[module]/[revision]/[type]s/ivy-[revision].xml'
+                artifactLayout = '[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]'
+                mavenCompatible = false
+            }
+        }
+        defaults {
+            publications 'ivy'
+        }        
+    }
+    clientConfig.info.setBuildName(project.name)
+//    clientConfig.info.setBuildNumber(project.version)
+    clientConfig.info.setBuildNumber('1')
+}
+
+publishing {
+	publications {
+          ivy(IvyPublication) {
+	    artifact jar
+          }
+     }
 }
 
 description 'Provides a task similar to Tar and Zip for constructing RPM and DEB package files.'
